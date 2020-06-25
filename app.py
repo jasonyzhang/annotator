@@ -144,4 +144,4 @@ def show_image():
 if __name__ == "__main__":
     if not osp.exists(OUTPUT_DIR):
         os.makedirs(OUTPUT_DIR)
-    app.run(debug=True)
+    app.run(host='0.0.0.0', port=29152)
