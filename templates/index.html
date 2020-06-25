@@ -12,9 +12,9 @@
 <h1>PHOSA Evaluation</h1>
 
 <h2>Evaluation types:</h2>
-{%for i in range(0, len)%}
+{% for ablation in ablations_list %}
     <p>
-    <a href="/{{ablations_list[i]}}">{{ablations_list[i]}}</a>
+    <a href="/{{ablation}}">{{ablation}}</a> (Finished: {{counts[ablation][0]}}/{{counts[ablation][1]}})
     </p>
 {%endfor%}
 

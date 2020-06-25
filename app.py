@@ -32,6 +32,20 @@ def get_anno_data(ablation, category):
         return [-1] * 50
 
 
+def get_num_finished(ablation):
+    ready = {}
+    for cat in CATEGORIES_LIST:
+        if len(glob(osp.join(DATA_DIR, cat, ablation, "*.jpg"))) >= 50:
+            annotations = get_anno_data(ablation, cat)
+            if -1 in annotations:
+                first_index = annotations.index(-1)
+            else:
+                first_index = 0
+            num_finished = 50 - annotations.count(-1)
+            ready[cat] = (first_index, num_finished)
+    return ready
+
+
 @app.route('/submit', methods=['POST'])
 def submit():
     data = flask.request.json
@@ -58,16 +72,7 @@ def image(ablation, category, index):
 
 @app.route('/<ablation>')
 def available_categories(ablation):
-    ready = {}
-    for cat in CATEGORIES_LIST:
-        if len(glob(osp.join(DATA_DIR, cat, ablation, "*.jpg"))) >= 50:
-            annotations = get_anno_data(ablation, cat)
-            if -1 in annotations:
-                first_index = annotations.index(-1)
-            else:
-                first_index = 0
-            num_unfinished = 50 - annotations.count(-1)
-            ready[cat] = (first_index, num_unfinished)
+    ready = get_num_finished(ablation)
     return flask.render_template("ablation_list.html",
                                  ablation=ablation,
                                  available_categories=ready)
@@ -135,9 +140,17 @@ def evaluate(ablation, category, index):
 
 @app.route("/")
 def show_image():
-
+    counts = {}
+    for ablation in ABLATIONS_LIST:
+        finished = 0
+        total = 0
+        for _, num_finished in get_num_finished(ablation).values():
+            finished += num_finished
+            total += 50
+        counts[ablation] = (finished, total)
     return flask.render_template(
         "index.html", ablations_list=ABLATIONS_LIST, len=len(ABLATIONS_LIST),
+        counts=counts,
     )
 
 

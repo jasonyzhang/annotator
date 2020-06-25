@@ -67,6 +67,16 @@ function selectBoth() {
 }
 
 
+function clearSelection() {
+    if ($( "#left" ).hasClass("highlight")) {
+        $("#left").removeClass("highlight");
+    }
+    if ($( "#right" ).hasClass("highlight")) {
+        $("#right").removeClass("highlight");
+    }
+}
+
+
 function nextImage() {
     index = parseInt(imageMetadata["index"]);
     if (index >= 49) {
@@ -97,18 +107,20 @@ function prevImage() {
 $(document).keydown(function(event){
     if (event.key == 'w') {
         selectLeft();
-        submit();
     } else if (event.key == 'e') {
         selectBoth();
-        submit();
     } else if (event.key == 'r') {
         selectRight()
-        submit();
     } else if (event.key == "ArrowLeft") {
+        submit();
         prevImage();
-        submit();
     } else if (event.key == "ArrowRight") {
-        nextImage();
         submit();
+        nextImage();
+    } else if (event.key == " ") {
+        clearSelection();
+    } else if (event.key == "Enter") {
+        submit();
+        location.reload();
     }
 });
