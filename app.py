@@ -5,7 +5,6 @@ import random
 from glob import glob
 
 import flask
-import numpy as np
 
 app = flask.Flask(__name__)
 DATA_DIR = "ablations"
